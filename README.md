@@ -2,7 +2,7 @@
 
 **Link rein. Format wählen. Datei herunterladen.**
 
-Eine selbst gehostete Weboberfläche für Video- und Audio-Downloads: Füge eine unterstützte URL ein, wähle Video oder MP3 und stelle deine gewünschte Qualitätsstufe ein. Die deutsche Oberfläche führt dich durch den Download.
+Eine selbst gehostete Weboberfläche für Video- und Audio-Downloads: Füge eine unterstützte URL ein, wähle Video oder MP3 und stelle die gewünschte Auflösung oder MP3-Bitrate ein.
 
 Built with **Python · Gradio · yt-dlp · FFmpeg**.
 
@@ -10,9 +10,10 @@ Built with **Python · Gradio · yt-dlp · FFmpeg**.
 
 ## Das bietet das Projekt
 
-- **Bedienung im Browser:** Linkfeld, Formatauswahl, Qualitätsstufe und Download-Datei in einer Oberfläche.
+- **Bedienung im Browser:** Linkfeld, Formatauswahl, Auflösung oder Bitrate und Download-Datei in einer Oberfläche.
 - **Video oder Audio:** Video-Download mit bevorzugtem MP4-Format oder Audio-Extraktion als MP3.
-- **Vier Qualitätsstufen:** Beste verfügbare Qualität sowie Voreinstellungen für 1080p, 720p und 480p.
+- **Exakte Videoauflösung:** Beste Qualität sowie 1080p, 720p, 480p, 360p und 144p.
+- **Getrennte MP3-Bitrate:** 320, 256, 192 oder 128 kbps.
 - **Selbst hosten:** Dockerfile mit Python 3.11 und FFmpeg enthalten.
 - **Statusanzeige:** Rückmeldung zum Ergebnis oder zu Download-Fehlern.
 
@@ -33,19 +34,18 @@ docker run --rm -p 127.0.0.1:10000:10000 universal-downloader
 
 1. Füge einen Link zu einem eigenen oder zum Download freigegebenen Medium ein.
 2. Wähle **Video (MP4)** oder **Audio (MP3)**.
-3. Wähle die Qualitätsstufe und klicke auf **Herunterladen**.
+3. Wähle die Videoauflösung oder MP3-Bitrate und klicke auf **Herunterladen**.
 4. Speichere die Datei aus **Dein fertiger Download**.
 
 ## Qualitätsauswahl
 
-| Auswahl | Video-Voreinstellung | MP3-Zielbitrate |
+| Bereich | Auswahl | Verhalten |
 | --- | --- | --- |
-| Beste Qualität | Beste verfügbare Auswahl | 320 kbps |
-| Hoch | Bevorzugt bis 1080p | 256 kbps |
-| Mittel | Bevorzugt bis 720p | 192 kbps |
-| Niedrig | Bevorzugt bis 480p | 128 kbps |
+| Video | Beste verfügbare Qualität | Lädt die beste verfügbare Videospur. |
+| Video | 1080p, 720p, 480p, 360p oder 144p | Lädt nur die genau ausgewählte Höhe. Ist sie nicht vorhanden, bricht der Download mit einer Meldung ab. |
+| MP3 | 320, 256, 192 oder 128 kbps | Konvertiert die Audiospur mit der ausgewählten Zielbitrate. |
 
-Die verfügbare Quelle bestimmt die tatsächliche Qualität. Höhere MP3-Zielbitraten verbessern keine bereits verlustbehaftete Quelle. Der Video-Fallback kann ein anderes Format oder eine andere Auflösung liefern; MP4 und die ausgewählte Höhenbegrenzung sind nicht in jedem Fall garantiert.
+Die App lädt bei einer gewählten Videohöhe keine andere Auflösung als Ersatz. Höhere MP3-Bitraten verbessern keine bereits verlustbehaftete Quelle.
 
 ## Aktueller Stand
 
@@ -61,6 +61,6 @@ Wenn dir das Projekt hilft, freue ich mich über einen GitHub-Star.
 
 ## English summary
 
-Universal Downloader is a self-hosted German-language web UI for yt-dlp. Paste a supported media URL, choose video (MP4 preferred) or MP3 audio, select a quality preset, and retrieve the resulting file. A Dockerfile with FFmpeg is included. Source availability and platform support vary.
+Universal Downloader is a self-hosted German-language web UI for yt-dlp. Paste a supported media URL, choose video or MP3 audio, select an exact video resolution or an MP3 bitrate, and retrieve the resulting file. Exact video selections fail when the source does not provide that height. A Dockerfile with FFmpeg is included.
 
 Use it only for content you own or have permission to download.
