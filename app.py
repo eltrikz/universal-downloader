@@ -1,6 +1,5 @@
 import os
 import shutil
-import tempfile
 
 import gradio as gr
 import yt_dlp
@@ -64,6 +63,16 @@ def analyze_media(url):
         )
     except Exception as error:
         return gr.update(choices=[], value=None), f"Analyse fehlgeschlagen: {error}"
+
+
+def toggle_quality_controls(format_choice):
+    is_video = format_choice == "Video (MP4)"
+    return (
+        gr.update(visible=is_video),
+        gr.update(visible=not is_video),
+        gr.update(visible=is_video),
+        gr.update(visible=is_video),
+    )
 
 
 def download_media(url, format_choice, video_quality, audio_quality):
@@ -144,7 +153,7 @@ with gr.Blocks(title="Universal Downloader") as demo:
             choices=[], label="Videoauflösung", value=None
         )
         audio_quality = gr.Dropdown(
-            choices=list(AUDIO_BITRATES), label="MP3-Bitrate", value="320 kbps"
+            choices=list(AUDIO_BITRATES), label="MP3-Bitrate", value="320 kbps", visible=False
         )
 
     btn_download = gr.Button("Herunterladen", variant="primary")
@@ -156,6 +165,11 @@ with gr.Blocks(title="Universal Downloader") as demo:
         fn=analyze_media,
         inputs=url_input,
         outputs=[video_quality, analysis_output],
+    )
+    format_choice.change(
+        fn=toggle_quality_controls,
+        inputs=format_choice,
+        outputs=[video_quality, audio_quality, btn_analyze, analysis_output],
     )
     btn_download.click(
         fn=download_media,
