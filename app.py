@@ -1,4 +1,5 @@
 import os
+import shutil
 import tempfile
 
 import gradio as gr
@@ -12,7 +13,29 @@ AUDIO_BITRATES = {
     "128 kbps": "128",
 }
 
-DOWNLOAD_DIR = os.path.join(tempfile.gettempdir(), "universal-downloader")
+DOWNLOAD_DIR = os.path.join(
+    os.path.expanduser("~"), "Documents", "Universal Downloader"
+)
+
+
+def find_ffmpeg_location():
+    """Find FFmpeg on PATH or in the standard WinGet package folder."""
+    ffmpeg_path = shutil.which("ffmpeg")
+    if ffmpeg_path:
+        return os.path.dirname(ffmpeg_path)
+
+    local_app_data = os.environ.get("LOCALAPPDATA")
+    if not local_app_data:
+        return None
+
+    package_dir = os.path.join(local_app_data, "Microsoft", "WinGet", "Packages")
+    if not os.path.isdir(package_dir):
+        return None
+
+    for root, _, files in os.walk(package_dir):
+        if "ffmpeg.exe" in files:
+            return root
+    return None
 
 
 def analyze_media(url):
@@ -57,7 +80,13 @@ def download_media(url, format_choice, video_quality, audio_quality):
         "quiet": False,
     }
 
+    ffmpeg_location = find_ffmpeg_location()
+    if ffmpeg_location:
+        ydl_opts["ffmpeg_location"] = ffmpeg_location
+
     if format_choice == "Audio (MP3)":
+        if not ffmpeg_location:
+            return None, "FFmpeg wurde nicht gefunden. Installiere es mit: winget install --id Gyan.FFmpeg -e --source winget"
         bitrate = AUDIO_BITRATES[audio_quality]
         ydl_opts.update({
             "format": "bestaudio/best",
@@ -66,7 +95,6 @@ def download_media(url, format_choice, video_quality, audio_quality):
                 "preferredcodec": "mp3",
                 "preferredquality": bitrate,
             }],
-            "postprocessor_args": {"FFmpegExtractAudio": ["-b:a", f"{bitrate}k"]},
         })
         detail = f"MP3 mit Zielbitrate {bitrate} kbps"
     else:
