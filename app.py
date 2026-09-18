@@ -28,11 +28,17 @@ def find_ffmpeg_location():
     return None
 
 
+def visible_download_path(filename):
+    """Show a useful path without exposing the Windows account name."""
+    return os.path.join("Dokumente", "Universal Downloader", os.path.basename(filename))
+
+
 def analyze_media(url):
     if not url:
         return gr.update(choices=[], value=None), "Bitte gib zuerst einen Link ein."
     try:
-        with yt_dlp.YoutubeDL({"quiet": True, "noplaylist": True, "skip_download": True}) as ydl:
+        options = {"quiet": True, "noplaylist": True, "skip_download": True}
+        with yt_dlp.YoutubeDL(options) as ydl:
             info = ydl.extract_info(url, download=False)
         heights = sorted({
             item["height"] for item in info.get("formats", [])
@@ -105,7 +111,7 @@ def download_media(url, format_choice, video_quality, audio_quality):
         if not os.path.exists(filename):
             return "", "Der Download lief durch, aber die Ausgabedatei wurde nicht gefunden."
         title = info.get("title", "Download")
-        return filename, f"Heruntergeladen: {title} — {detail}"
+        return visible_download_path(filename), f"Heruntergeladen: {title} — {detail}"
     except yt_dlp.utils.DownloadError as error:
         if format_choice == "Video (MP4)" and "Requested format is not available" in str(error):
             return "", f"{video_quality} ist für dieses Video nicht verfügbar. Analysiere das Video erneut."
@@ -123,25 +129,16 @@ with gr.Blocks(title="Universal Downloader") as demo:
     with gr.Row():
         format_choice = gr.Radio(["Video (MP4)", "Audio (MP3)"], label="Format", value="Video (MP4)")
         video_quality = gr.Dropdown(choices=[], label="Videoauflösung", value=None)
-        audio_quality = gr.Dropdown(
-            choices=list(AUDIO_BITRATES), label="MP3-Bitrate", value="320 kbps", visible=False
-        )
+        audio_quality = gr.Dropdown(choices=list(AUDIO_BITRATES), label="MP3-Bitrate", value="320 kbps", visible=False)
     btn_download = gr.Button("Herunterladen", variant="primary")
     with gr.Row():
         file_output = gr.Textbox(label="Gespeichert unter", interactive=False)
         text_output = gr.Textbox(label="Status", interactive=False)
     btn_analyze.click(analyze_media, url_input, [video_quality, analysis_output])
-    format_choice.change(
-        toggle_quality_controls, format_choice,
-        [video_quality, audio_quality, btn_analyze, analysis_output],
-    )
-    btn_download.click(
-        download_media,
-        [url_input, format_choice, video_quality, audio_quality],
-        [file_output, text_output],
-    )
+    format_choice.change(toggle_quality_controls, format_choice, [video_quality, audio_quality, btn_analyze, analysis_output])
+    btn_download.click(download_media, [url_input, format_choice, video_quality, audio_quality], [file_output, text_output])
 
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
-    demo.launch(server_name="0.0.0.0", server_port=port, show_error=True)
+    demo.launch(server_name="127.0.0.1", server_port=port, show_error=True)
