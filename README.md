@@ -1,66 +1,100 @@
 # Universal Downloader
 
-**Link rein. Format wählen. Datei herunterladen.**
+**Kostenlos, lokal und ohne Werbung.**
 
-Eine selbst gehostete Weboberfläche für Video- und Audio-Downloads: Füge eine unterstützte URL ein, wähle Video oder MP3 und stelle die gewünschte Auflösung oder MP3-Bitrate ein.
+Universal Downloader ist eine deutschsprachige Oberfläche für yt-dlp. Sie läuft auf dem eigenen Windows-PC, braucht weder Git noch Docker und zeigt keine Werbung. Link einfügen, vorhandene Videoauflösungen prüfen und als MP4 oder MP3 speichern.
 
-Built with **Python · Gradio · yt-dlp · FFmpeg**.
+> Die App selbst verlangt kein Konto und keine Zahlung. Nutze sie nur für Medien, die dir gehören oder für die du eine Download-Erlaubnis hast.
 
-[Loslegen](#schnellstart-mit-docker) · [Feedback geben](https://github.com/eltrikz/universal-downloader/issues)
+## Funktionen
 
-## Das bietet das Projekt
+- **MP4 in exakter Auflösung:** Erst analysieren, dann eine tatsächlich verfügbare Auflösung wählen, von 144p bis 4K, wenn die Quelle sie anbietet.
+- **MP3 ohne Videoauswahl:** Bei Audio stehen nur die MP3-Bitraten 320, 256, 192 und 128 kbps zur Auswahl.
+- **Speichert direkt in Dokumente:** Fertige Dateien liegen in Dokumente/Universal Downloader.
+- **FFmpeg-Erkennung:** Die App erkennt die kostenlose WinGet-Version von FFmpeg automatisch.
+- **Lokal im Browser:** Die Oberfläche ist unter http://localhost:10000 erreichbar.
 
-- **Bedienung im Browser:** Linkfeld, Formatauswahl, Auflösung oder Bitrate und Download-Datei in einer Oberfläche.
-- **Video oder Audio:** Video-Download mit bevorzugtem MP4-Format oder Audio-Extraktion als MP3.
-- **Exakte Videoauflösung:** Beste Qualität sowie 1080p, 720p, 480p, 360p und 144p.
-- **Getrennte MP3-Bitrate:** 320, 256, 192 oder 128 kbps.
-- **Selbst hosten:** Dockerfile mit Python 3.11 und FFmpeg enthalten.
-- **Statusanzeige:** Rückmeldung zum Ergebnis oder zu Download-Fehlern.
+Die Plattform, das jeweilige Video und yt-dlp bestimmen, welche Formate verfügbar sind. Wenn eine ausgewählte Auflösung nicht angeboten wird, meldet die App das, statt stillschweigend eine andere Auflösung herunterzuladen.
 
-Die unterstützten Quellen hängen von yt-dlp, der jeweiligen Plattform und der Zugänglichkeit des Inhalts ab. Eine URL ist keine Garantie für einen erfolgreichen Download.
+## Kostenlos auf Windows installieren — ohne Git und Docker
 
-## Schnellstart mit Docker
+### 1. Projekt als ZIP herunterladen
 
-Voraussetzungen: Git und eine laufende Docker-Installation.
+1. Klicke oben auf dieser GitHub-Seite auf **Code**.
+2. Wähle **Download ZIP**.
+3. Entpacke die ZIP-Datei, zum Beispiel in deinen Downloads-Ordner.
 
-```sh
-git clone https://github.com/eltrikz/universal-downloader.git
-cd universal-downloader
-docker build -t universal-downloader .
-docker run --rm -p 127.0.0.1:10000:10000 universal-downloader
+Danach liegt die App normalerweise hier:
+
+```text
+C:/Users/DEIN-NAME/Downloads/universal-downloader-main/universal-downloader-main
 ```
 
-Öffne anschließend **http://localhost:10000**.
+### 2. Python installieren
 
-1. Füge einen Link zu einem eigenen oder zum Download freigegebenen Medium ein.
-2. Wähle **Video (MP4)** oder **Audio (MP3)**.
-3. Wähle die Videoauflösung oder MP3-Bitrate und klicke auf **Herunterladen**.
-4. Speichere die Datei aus **Dein fertiger Download**.
+Installiere die kostenlose aktuelle Python-Version von [python.org](https://www.python.org/downloads/windows/). Aktiviere im Installer unbedingt **Add Python to PATH**.
 
-## Qualitätsauswahl
+Öffne danach PowerShell im entpackten Projektordner. Am einfachsten: Im Explorer den Ordner öffnen, oben in die Adressleiste `powershell` schreiben und Enter drücken.
 
-| Bereich | Auswahl | Verhalten |
-| --- | --- | --- |
-| Video | Beste verfügbare Qualität | Lädt die beste verfügbare Videospur. |
-| Video | 1080p, 720p, 480p, 360p oder 144p | Lädt nur die genau ausgewählte Höhe. Ist sie nicht vorhanden, bricht der Download mit einer Meldung ab. |
-| MP3 | 320, 256, 192 oder 128 kbps | Konvertiert die Audiospur mit der ausgewählten Zielbitrate. |
+### 3. Benötigte Python-Pakete installieren
 
-Die App lädt bei einer gewählten Videohöhe keine andere Auflösung als Ersatz. Höhere MP3-Bitraten verbessern keine bereits verlustbehaftete Quelle.
+Führe in PowerShell aus:
 
-## Aktueller Stand
+```powershell
+py -m pip install -r requirements.txt
+```
 
-Das Projekt ist eine frühe, kompakte Anwendung für einzelne Medienlinks. Ein Playlist- oder Stapel-Workflow, eine Anmeldung und eine Cookie-Konfiguration in der Oberfläche sind derzeit nicht implementiert. Die Docker-Anleitung ist aus dem vorhandenen Dockerfile abgeleitet; sie ist kein Nachweis eines durchgeführten Ende-zu-Ende-Tests.
+### 4. FFmpeg kostenlos installieren
 
-Für den eigenen Rechner bindet der obige Docker-Befehl den Port nur an localhost. Die Anwendung enthält selbst keine Zugangskontrolle.
+FFmpeg wird für MP3-Konvertierung und das Zusammenführen von Video und Ton gebraucht:
 
-## Feedback willkommen
+```powershell
+winget install --id Gyan.FFmpeg -e --source winget
+```
 
-Fehlt dir eine Funktion oder schlägt ein Download fehl? [Erstelle ein Issue](https://github.com/eltrikz/universal-downloader/issues) mit der Plattform, der gewählten Einstellung und einer bereinigten Fehlermeldung. Bitte keine Cookies, Zugangsdaten oder privaten Medienlinks posten.
+Die Meldung *Found an existing package already installed* ist in Ordnung. FFmpeg ist dann bereits vorhanden.
 
-Wenn dir das Projekt hilft, freue ich mich über einen GitHub-Star.
+### 5. App starten
 
-## English summary
+```powershell
+py app.py
+```
 
-Universal Downloader is a self-hosted German-language web UI for yt-dlp. Paste a supported media URL, choose video or MP3 audio, select an exact video resolution or an MP3 bitrate, and retrieve the resulting file. Exact video selections fail when the source does not provide that height. A Dockerfile with FFmpeg is included.
+Öffne danach im Browser:
 
-Use it only for content you own or have permission to download.
+```text
+http://localhost:10000
+```
+
+Verwende **nicht** `http://0.0.0.0:10000`: Das ist nur die interne Server-Adresse und funktioniert nicht im Browser.
+
+## So benutzt du die App
+
+1. Füge einen Link ein.
+2. Für ein Video: **Video (MP4)** wählen und auf **Video analysieren** klicken.
+3. Wähle eine der gefundenen Auflösungen und klicke auf **Herunterladen**.
+4. Für Audio: **Audio (MP3)** wählen, die gewünschte Bitrate einstellen und auf **Herunterladen** klicken.
+5. Die App zeigt den vollständigen Speicherpfad an. Alle Dateien liegen in Dokumente/Universal Downloader.
+
+## Aktualisieren
+
+Wenn eine neue Version auf GitHub verfügbar ist, beende die App mit `Ctrl+C` und führe im Projektordner aus:
+
+```powershell
+Invoke-WebRequest "https://raw.githubusercontent.com/eltrikz/universal-downloader/main/app.py" -OutFile app.py
+py -m pip install --upgrade -r requirements.txt
+py app.py
+```
+
+## Häufige Probleme
+
+| Problem | Lösung |
+| --- | --- |
+| Browser meldet „This site can't be reached“ | Starte die App mit `py app.py` und öffne `http://localhost:10000`. |
+| FFmpeg wurde nicht gefunden | Führe den WinGet-Befehl aus Abschnitt 4 aus und starte die App danach neu. |
+| Gewünschte Auflösung fehlt | Die Quelle stellt diese Auflösung nicht bereit. Wähle eine der analysierten Auflösungen. |
+| Download schlägt fehl | Aktualisiere die Python-Pakete mit `py -m pip install --upgrade -r requirements.txt` und versuche es erneut. |
+
+## Hinweis
+
+Dieses Projekt verwendet [yt-dlp](https://github.com/yt-dlp/yt-dlp). Unterstützung und verfügbare Formate hängen von der jeweiligen Quelle ab. Bitte veröffentliche weder Zugangsdaten noch Cookie-Dateien in Issues.
