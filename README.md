@@ -1,84 +1,80 @@
 # Universal Downloader
 
-**Kostenlos, lokal und ohne Werbung.**
+**Free, local, and ad-free.**
 
-Universal Downloader ist eine deutschsprachige Oberfläche für yt-dlp. Sie läuft auf dem eigenen Windows-PC, braucht weder Git noch Docker und zeigt keine Werbung. Link einfügen, vorhandene Videoauflösungen prüfen und als MP4 oder MP3 speichern.
+Universal Downloader is an English web interface for yt-dlp. It runs on your own Windows PC, needs neither Git nor Docker, and shows no advertising. Paste a link, inspect available video resolutions, then save an MP4 or MP3.
 
-> Die App selbst verlangt kein Konto und keine Zahlung. Nutze sie nur für Medien, die dir gehören oder für die du eine Download-Erlaubnis hast.
+> The app requires no account or payment. Only use it for media you own or are allowed to download.
 
-## Funktionen
+## Features
 
-- **MP4 in exakter Auflösung:** Erst analysieren, dann eine tatsächlich verfügbare Auflösung wählen, von 144p bis 4K, wenn die Quelle sie anbietet.
-- **MP3 ohne Videoauswahl:** Bei Audio stehen nur die MP3-Bitraten 320, 256, 192 und 128 kbps zur Auswahl.
-- **Speichert direkt in Dokumente:** Fertige Dateien liegen in Dokumente/Universal Downloader.
-- **FFmpeg-Erkennung:** Die App erkennt die kostenlose WinGet-Version von FFmpeg automatisch.
-- **Lokal im Browser:** Die Oberfläche ist unter http://localhost:10000 erreichbar.
+- **MP4 at an exact resolution:** Analyze the media first, then choose a real available resolution from 144p through 4K when offered.
+- **MP3 without a video selection:** Audio mode offers only 320, 256, 192, or 128 kbps.
+- **Saves to Documents:** Finished files go to `Documents/Universal Downloader`.
+- **FFmpeg detection:** The app automatically detects the free WinGet FFmpeg package.
+- **Local-only access:** The server listens at `http://localhost:10000` and is not exposed on your network.
 
-Die Plattform, das jeweilige Video und yt-dlp bestimmen, welche Formate verfügbar sind. Wenn eine ausgewählte Auflösung nicht angeboten wird, meldet die App das, statt stillschweigend eine andere Auflösung herunterzuladen.
+Platforms, individual media, and yt-dlp determine the formats that are available. If a requested resolution is unavailable, the app reports it instead of silently downloading another resolution.
 
-## Kostenlos auf Windows installieren — ohne Git und Docker
+## Free Windows installation — no Git or Docker
 
-### 1. Projekt als ZIP herunterladen
+### 1. Download the project as a ZIP
 
-1. Klicke oben auf dieser GitHub-Seite auf **Code**.
-2. Wähle **Download ZIP**.
-3. Entpacke die ZIP-Datei, zum Beispiel in deinen Downloads-Ordner.
+1. Click **Code** on this GitHub page.
+2. Select **Download ZIP**.
+3. Extract the ZIP, for example in Downloads.
 
-Danach liegt die App normalerweise hier:
+The app is normally located at:
 
 ```text
-C:/Users/DEIN-NAME/Downloads/universal-downloader-main/universal-downloader-main
+C:/Users/YOUR-NAME/Downloads/universal-downloader-main/universal-downloader-main
 ```
 
-### 2. Python installieren
+### 2. Install Python
 
-Installiere die kostenlose aktuelle Python-Version von [python.org](https://www.python.org/downloads/windows/). Aktiviere im Installer unbedingt **Add Python to PATH**.
+Install the current free Python version from [python.org](https://www.python.org/downloads/windows/). In the installer, select **Add Python to PATH**.
 
-Öffne danach PowerShell im entpackten Projektordner. Am einfachsten: Im Explorer den Ordner öffnen, oben in die Adressleiste `powershell` schreiben und Enter drücken.
+Open PowerShell in the extracted project folder. In File Explorer, open the folder, type `powershell` into the address bar, and press Enter.
 
-### 3. Benötigte Python-Pakete installieren
-
-Führe in PowerShell aus:
+### 3. Install the Python packages
 
 ```powershell
 py -m pip install -r requirements.txt
 ```
 
-### 4. FFmpeg kostenlos installieren
-
-FFmpeg wird für MP3-Konvertierung und das Zusammenführen von Video und Ton gebraucht:
+### 4. Install FFmpeg for free
 
 ```powershell
 winget install --id Gyan.FFmpeg -e --source winget
 ```
 
-Die Meldung *Found an existing package already installed* ist in Ordnung. FFmpeg ist dann bereits vorhanden.
+The message *Found an existing package already installed* means it is already installed.
 
-### 5. App starten
+### 5. Start the app
 
 ```powershell
 py app.py
 ```
 
-Öffne danach im Browser:
+Then open:
 
 ```text
 http://localhost:10000
 ```
 
-Verwende **nicht** `http://0.0.0.0:10000`: Das ist nur die interne Server-Adresse und funktioniert nicht im Browser.
+Do **not** open `http://0.0.0.0:10000`; that is a server bind address, not a browser address.
 
-## So benutzt du die App
+## Using the app
 
-1. Füge einen Link ein.
-2. Für ein Video: **Video (MP4)** wählen und auf **Video analysieren** klicken.
-3. Wähle eine der gefundenen Auflösungen und klicke auf **Herunterladen**.
-4. Für Audio: **Audio (MP3)** wählen, die gewünschte Bitrate einstellen und auf **Herunterladen** klicken.
-5. Die App zeigt den vollständigen Speicherpfad an. Alle Dateien liegen in Dokumente/Universal Downloader.
+1. Paste a link.
+2. For a video, choose **Video (MP4)** and click **Analyze video**.
+3. Pick one of the detected resolutions, then click **Download**.
+4. For audio, choose **Audio (MP3)**, choose a bitrate, then click **Download**.
+5. Finished files are in `Documents/Universal Downloader`.
 
-## Aktualisieren
+## Updating
 
-Wenn eine neue Version auf GitHub verfügbar ist, beende die App mit `Ctrl+C` und führe im Projektordner aus:
+Stop the app with `Ctrl+C`, then run:
 
 ```powershell
 Invoke-WebRequest "https://raw.githubusercontent.com/eltrikz/universal-downloader/main/app.py" -OutFile app.py
@@ -86,15 +82,15 @@ py -m pip install --upgrade -r requirements.txt
 py app.py
 ```
 
-## Häufige Probleme
+## Troubleshooting
 
-| Problem | Lösung |
+| Problem | Solution |
 | --- | --- |
-| Browser meldet „This site can't be reached“ | Starte die App mit `py app.py` und öffne `http://localhost:10000`. |
-| FFmpeg wurde nicht gefunden | Führe den WinGet-Befehl aus Abschnitt 4 aus und starte die App danach neu. |
-| Gewünschte Auflösung fehlt | Die Quelle stellt diese Auflösung nicht bereit. Wähle eine der analysierten Auflösungen. |
-| Download schlägt fehl | Aktualisiere die Python-Pakete mit `py -m pip install --upgrade -r requirements.txt` und versuche es erneut. |
+| “This site can't be reached” | Start the app with `py app.py`, then open `http://localhost:10000`. |
+| FFmpeg was not found | Run the FFmpeg install command above and restart the app. |
+| A resolution is missing | The source does not offer that resolution; pick a detected option. |
+| A download fails | Update packages with `py -m pip install --upgrade -r requirements.txt` and try again. |
 
-## Hinweis
+## Note
 
-Dieses Projekt verwendet [yt-dlp](https://github.com/yt-dlp/yt-dlp). Unterstützung und verfügbare Formate hängen von der jeweiligen Quelle ab. Bitte veröffentliche weder Zugangsdaten noch Cookie-Dateien in Issues.
+This project uses [yt-dlp](https://github.com/yt-dlp/yt-dlp). Source support and available formats depend on each site. Never publish credentials or cookie files in an issue.
