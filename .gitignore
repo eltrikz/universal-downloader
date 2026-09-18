@@ -1,0 +1,22 @@
+# Private credentials
+cookies.txt
+*.cookie
+*.cookies
+.env
+.env.*
+*.pem
+*.key
+
+# Python and local application data
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.gradio/
+
+# Local media files
+downloads/
+*.mp3
+*.mp4
+*.m4a
+*.webm
